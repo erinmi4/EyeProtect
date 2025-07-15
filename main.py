@@ -13,6 +13,18 @@ from reminder_window import ReminderWindow
 import config
 
 
+def get_resource_path(relative_path):
+    """获取资源文件的绝对路径，支持PyInstaller打包后的路径"""
+    try:
+        # PyInstaller 创建临时文件夹，并将路径存储在 _MEIPASS 中
+        base_path = sys._MEIPASS
+    except AttributeError:
+        # 如果没有_MEIPASS属性，说明是在开发环境中运行
+        base_path = os.path.abspath(".")
+    
+    return os.path.join(base_path, relative_path)
+
+
 class EyeRestReminder:
     def __init__(self):
         self.is_paused = False
@@ -40,7 +52,20 @@ class EyeRestReminder:
         
     def create_icon(self):
         """创建托盘图标"""
-        # 创建一个简单的眼睛图标
+        # 尝试加载外部图标文件
+        try:
+            icon_path = get_resource_path('icon.png')
+            if os.path.exists(icon_path):
+                # 如果找到图标文件，使用它
+                image = Image.open(icon_path)
+                # 调整尺寸为64x64
+                image = image.resize((64, 64), Image.Resampling.LANCZOS)
+                return image
+        except Exception as e:
+            if config.DEBUG_MODE:
+                print(f"无法加载图标文件: {e}")
+        
+        # 如果没有找到图标文件，创建一个简单的眼睛图标
         image = Image.new('RGB', (64, 64), color='white')
         draw = ImageDraw.Draw(image)
         
