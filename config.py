@@ -57,6 +57,12 @@ NORMAL_FONT = ('微软雅黑', 10)
 # 启动时是否自动开始计时
 AUTO_START = True
 
+# 是否显示剩余时间
+SHOW_REMAINING_TIME = True
+
+# 剩余时间更新间隔（秒）
+TIME_UPDATE_INTERVAL = 1
+
 # 是否允许延长休息时间
 ALLOW_EXTEND_REST = True
 
